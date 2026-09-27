@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Michroma', sans-serif;
+  --font-body: 'Encode Sans Expanded', sans-serif;
+}
+
+@font-face {
+  font-family: 'Michroma';
+  src: url('/fonts/Michroma/Michroma-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Encode Sans Expanded';
+  src: url('/fonts/Encode_Sans_Expanded/EncodeSansExpanded-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #08090c;
+  --foreground: #f3f4f6;
+
+  /* Official Unclip Brand Token Palette */
+  --unclip-cyan: #00c4cc;
+  --unclip-yellow: #ffec00;
+  --unclip-blue: #138eff;
+  --unclip-purple: #ad7e93;
+
+  --unclip-dark: #08090c;
+  --unclip-card: #0d1017;
+  --unclip-surface: #141824;
+  --unclip-border: rgba(0, 196, 204, 0.18);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Encode Sans Expanded', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Typography Utility Classes */
+.font-heading {
+  font-family: 'Michroma', sans-serif;
+}
+
+.font-body {
+  font-family: 'Encode Sans Expanded', sans-serif;
+}
+
+/* Ambient Background Glow */
+.unclip-ambient-bg {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 196, 204, 0.12) 0%, rgba(8, 9, 12, 0) 60%),
+    radial-gradient(circle at 85% 20%, rgba(255, 236, 0, 0.05) 0%, rgba(8, 9, 12, 0) 50%),
+    radial-gradient(circle at 15% 80%, rgba(19, 142, 255, 0.06) 0%, rgba(8, 9, 12, 0) 50%);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(13, 16, 23, 0.8);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 196, 204, 0.3);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 196, 204, 0.7);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
