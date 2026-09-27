@@ -32,8 +32,11 @@ RUN if [ ! -f "tools/whisper.cpp/build/bin/whisper-cli" ]; then \
       bash tools/whisper.cpp/build_whisper.sh ; \
     fi
 
-# Ensure model directory exists
-RUN mkdir -p tools/whisper.cpp/models tools/llama.cpp/models
+# Ensure model directory exists and download ggml-large-v3-turbo.bin
+RUN mkdir -p tools/whisper.cpp/models tools/llama.cpp/models && \
+    if [ ! -f "tools/whisper.cpp/models/ggml-large-v3-turbo.bin" ]; then \
+      curl -L -o tools/whisper.cpp/models/ggml-large-v3-turbo.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin ; \
+    fi
 
 # Expose worker HTTP port
 EXPOSE 8080
