@@ -24,6 +24,22 @@ export default function Home() {
     };
   }, []);
 
+  // Helper to safely parse JSON responses without throwing Unexpected end of JSON input
+  const parseJsonResponse = async (res: Response) => {
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const text = await res.text();
+      if (text && text.trim().length > 0) {
+        try {
+          return JSON.parse(text);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  };
+
   // Poll job status until completed or failed
   useEffect(() => {
     if (!activeJobId) return;
@@ -32,16 +48,20 @@ export default function Home() {
       try {
         const res = await fetch(`/api/transcribe/${activeJobId}`);
         if (res.ok) {
-          const data: TranscriptionJob = await res.json();
-          setActiveJob(data);
+          const data: TranscriptionJob | null = await parseJsonResponse(res);
+          if (data) {
+            setActiveJob(data);
 
-          if (data.status === "completed" || data.status === "failed") {
-            if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-            setIsSubmitting(false);
+            if (data.status === "completed" || data.status === "failed") {
+              if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+              setIsSubmitting(false);
+            }
           }
+        } else {
+          console.error(`[Unclip] Polling GET /api/transcribe/${activeJobId} returned HTTP status ${res.status}`);
         }
       } catch (err) {
-        console.error("Polling error:", err);
+        console.error("[Unclip] Polling error:", err);
       }
     };
 
@@ -65,15 +85,22 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to create transcription job.");
+        console.error(`[Unclip] API POST /api/transcribe failed with HTTP status ${res.status}`);
+        const errData = await parseJsonResponse(res);
+        const userMsg = errData?.error || "Transcription service is currently unavailable. Please try again.";
+        throw new Error(userMsg);
       }
 
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
+      if (!data || !data.jobId) {
+        console.error(`[Unclip] API POST /api/transcribe returned HTTP ${res.status} but response body was empty or not valid JSON.`);
+        throw new Error("Transcription service is currently unavailable. Please try again.");
+      }
+
       setActiveJobId(data.jobId);
     } catch (err: unknown) {
       setIsSubmitting(false);
-      const msg = err instanceof Error ? err.message : "Error creating transcription job.";
+      const msg = err instanceof Error ? err.message : "Transcription service is currently unavailable. Please try again.";
       alert(msg);
     }
   };
@@ -90,14 +117,22 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to create sample demo job.");
+        console.error(`[Unclip] API POST /api/transcribe (demo) failed with HTTP status ${res.status}`);
+        const errData = await parseJsonResponse(res);
+        const userMsg = errData?.error || "Transcription service is currently unavailable. Please try again.";
+        throw new Error(userMsg);
       }
 
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
+      if (!data || !data.jobId) {
+        console.error(`[Unclip] API POST /api/transcribe (demo) returned HTTP ${res.status} but response body was empty or not valid JSON.`);
+        throw new Error("Transcription service is currently unavailable. Please try again.");
+      }
+
       setActiveJobId(data.jobId);
     } catch (err: unknown) {
       setIsSubmitting(false);
-      const msg = err instanceof Error ? err.message : "Error initializing demo reel.";
+      const msg = err instanceof Error ? err.message : "Transcription service is currently unavailable. Please try again.";
       alert(msg);
     }
   };
