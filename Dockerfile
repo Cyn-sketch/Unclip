@@ -1,3 +1,4 @@
+# Railway deployment trigger - self-contained whisper.cpp build
 # Production Worker Dockerfile for Unclip (Local Whisper + Playwright + FFmpeg)
 FROM node:20-bookworm
 
