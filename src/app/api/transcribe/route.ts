@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateInstagramUrl } from "@/lib/instagram/validator";
 import { createJob } from "@/lib/jobs/store";
+import { proxyToWorker } from "@/lib/worker-proxy";
 
 export async function POST(req: NextRequest) {
+  const proxied = await proxyToWorker(req, "/api/transcribe");
+  if (proxied) return proxied;
+
   try {
     const body = await req.json().catch(() => ({}));
     const { url, isDemo, demoId } = body;

@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getJob } from "@/lib/jobs/store";
+import { proxyToWorker } from "@/lib/worker-proxy";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ jobId: string }> }
 ) {
+  const { jobId } = await params;
+  const proxied = await proxyToWorker(req, `/api/transcribe/${jobId}`);
+  if (proxied) return proxied;
+
   try {
     const { jobId } = await params;
     if (!jobId) {
